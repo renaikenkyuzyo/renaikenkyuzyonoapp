@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>恋愛研究所</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 案内画面 */
+#installGuide {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #1f1f3a, #3a3a7a);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  z-index: 9999;
+}
+
+#installGuide h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+#installGuide p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+#installGuide .note {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 12px;
+}
+
+/* 通常コンテンツ */
+#mainContent {
+  padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- インストール案内 -->
+<div id="installGuide" style="display:none;">
+  <h2>📱 恋愛研究所アプリ</h2>
+  <p id="installText"></p>
+  <div class="note">
+    ※ 追加後はアプリのように使えます
+  </div>
+</div>
+
+<!-- 通常画面 -->
+<div id="mainContent">
+  <h1>恋愛研究所</h1>
+  <p>ようこそ、研究員。</p>
+  <p>ここに診断・検定・研究ログなどを置いていく。</p>
+</div>
+
+<script>
+// アプリ起動かどうか
+function isAppMode() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+}
+
+// 端末判定
+const ua = navigator.userAgent.toLowerCase();
+const isIphone = ua.includes('iphone');
+const isAndroid = ua.includes('android');
+
+const guide = document.getElementById('installGuide');
+const text = document.getElementById('installText');
+
+// ブラウザ起動時だけ表示
+if (!isAppMode()) {
+  guide.style.display = 'flex';
+
+  if (isIphone) {
+    text.innerHTML = `
+      Safari下の <strong>共有ボタン（□↑）</strong> を押して<br>
+      <strong>「ホーム画面に追加」</strong>してください。
+    `;
+  } else if (isAndroid) {
+    text.innerHTML = `
+      右上の <strong>︙ メニュー</strong> を押して<br>
+      <strong>「アプリをインストール」</strong><br>
+      または <strong>「ホーム画面に追加」</strong> を選んでください。
+    `;
+  } else {
+    text.innerHTML = `
+      スマートフォンでアクセスしてください。
+    `;
+  }
+}
+</script>
+
+</body>
+</html>
