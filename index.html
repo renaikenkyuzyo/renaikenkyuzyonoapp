@@ -13,17 +13,18 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: #fff;
-}
-
-/* ハートアニメーション */
-#heartAnimation {
-  position: fixed;
-  inset: 0;
-  background: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  height: 100vh;
+}
+
+/* ハートアニメ */
+#heartAnimation {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #heartAnimation svg {
@@ -38,7 +39,7 @@ body {
   stroke-linecap: round;
   stroke-dasharray: 300;
   stroke-dashoffset: 300;
-  animation: draw 4s ease-in-out 1.5; /* 1.5回再生 */
+  animation: draw 4s ease-in-out 1 forwards; /* 1回再生 */
 }
 
 @keyframes draw {
@@ -46,36 +47,13 @@ body {
   50% { stroke-dashoffset: 0; }
 }
 
-/* アプリ案内画面 */
-#installGuide {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #1f1f3a, #3a3a7a);
-  color: #fff;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 24px;
-  z-index: 9998;
-}
-
-#installGuide h2 {
-  font-size: 22px;
-  margin-bottom: 12px;
-}
-
-#installGuide p {
-  font-size: 15px;
-  line-height: 1.7;
-  opacity: 0.95;
-}
-
-.note {
-  font-size: 12px;
-  opacity: 0.8;
-  margin-top: 16px;
+/* 恋愛研究所文字 */
+#logoText {
+  position: absolute;
+  font-size: 32px;
+  color: #ff6ca3;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 </style>
 </head>
@@ -95,61 +73,28 @@ body {
   </svg>
 </div>
 
-<!-- ブラウザ用アプリ案内 -->
-<div id="installGuide">
-  <h2>📱 恋愛研究所公式アプリ💞</h2>
-  <p id="guideText"></p>
-  <div class="note">
-    ※ アプリを入れるとサイトが開けます。
-  </div>
-</div>
+<!-- 恋愛研究所文字 -->
+<div id="logoText">恋愛研究所</div>
 
 <script>
-// ユーザー環境判定
-function isAppMode() {
-  return window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
-}
-
 const heart = document.getElementById("heartAnimation");
-const guide = document.getElementById("installGuide");
-const text = document.getElementById("guideText");
-const ua = navigator.userAgent.toLowerCase();
-const isIphone = ua.includes("iphone");
-const isAndroid = ua.includes("android");
+const logo = document.getElementById("logoText");
 
-// アニメーション完了後の処理
-function afterAnimation() {
+// アニメ完了後の処理
+// ハートアニメは4秒で1回再生
+setTimeout(() => {
+  // ハートを非表示
   heart.style.display = "none";
 
-  if (isAppMode()) {
-    // アプリ → サイトへ
-    location.href = "https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory-app/ホーム";
-  } else {
-    // ブラウザ → アプリ案内
-    guide.style.display = "flex";
+  // ロゴ文字を表示
+  logo.style.opacity = 1;
 
-    if (isIphone) {
-      text.innerHTML = `
-        下の <strong>右下にある•••ボタンをクリック。その後共有ボタン（□↑）</strong> を押して<br>
-        <strong>「ホーム画面に追加」</strong>してください（右下に「もっと見る」がある場合はそこを選択してから、ホーム画面に追加を選択してください）
-      `;
-    } else if (isAndroid) {
-      text.innerHTML = `
-        右上の <strong>︙ メニュー</strong> から<br>
-        <strong>「アプリをインストール」</strong><br>
-        または <strong>「ホーム画面に追加」</strong>
-      `;
-    } else {
-      text.innerHTML = `
-        スマートフォンでアクセスしてください。スマートフォン以外ではアプリをダウンロードできません
-      `;
-    }
-  }
-}
+  // 文字を2秒表示してからGoogleサイトへ移動
+  setTimeout(() => {
+    window.location.href = "https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory-app";
+  }, 2000);
 
-// CSSアニメの完了時間（4s * 1.5回 = 6秒）
-setTimeout(afterAnimation, 6000);
+}, 4000);
 </script>
 
 </body>
