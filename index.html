@@ -2,228 +2,100 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>恋愛研究所アプリ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- アイコン -->
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
 
 <style>
-:root{
-  --bg1:#dfe9f3;
-  --bg2:#ffffff;
-  --accent:#ff4d6d;
-  --btn-bg:#007aff;
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-body{
-  margin:0;
-  font-family:-apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  background:linear-gradient(180deg,var(--bg1),var(--bg2));
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding-top:20px;
+/* アプリ案内画面 */
+#installGuide {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #1f1f3a, #3a3a7a);
+  color: #fff;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
 }
 
-/* 共通カード */
-.card{
-  width:90%;
-  max-width:400px;
-  background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(15px);
-  border-radius:20px;
-  box-shadow:0 10px 40px rgba(0,0,0,0.15);
-  padding:20px;
-  margin-bottom:20px;
-  text-align:center;
+#installGuide h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
 }
 
-h1{
-  font-size:1.6rem;
-  margin-bottom:6px;
-  font-weight:600;
+#installGuide p {
+  font-size: 15px;
+  line-height: 1.7;
+  opacity: 0.95;
 }
 
-.sub{
-  font-size:.9rem;
-  color:#666;
-  margin-bottom:12px;
-}
-
-button{
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  background:var(--btn-bg);
-  color:white;
-  font-size:1rem;
-  font-weight:600;
-  margin:6px 0;
-  width:80%;
-  max-width:250px;
-}
-
-button:active{
-  transform:scale(0.97);
-  background:#005acc;
-}
-
-/* iframe */
-iframe{
-  width:100%;
-  height:600px;
-  border:none;
-  border-radius:14px;
-}
-
-/* 利用規約テキスト */
-.text-area{
-  text-align:left;
-  font-size:13px;
-  line-height:1.5;
-  max-height:500px;
-  overflow-y:auto;
-  padding:10px;
-  background:rgba(255,255,255,0.9);
-  border-radius:14px;
-}
-
-/* メッセージ */
-#app-msg{
-  color:#ff3b30;
-  font-size:0.9rem;
-  margin-bottom:10px;
-}
-
-/* ページ切替 */
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
-}
-
-/* PC用リンク */
-.pc-link{
-  font-size:0.9rem;
-  color:#007aff;
-  text-decoration:underline;
-  cursor:pointer;
-  margin-bottom:10px;
-  display:block;
+.note {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 16px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="top-page">
-  <h1>恋は、目で見るものではない。心で見るもの。</h1>
-  <div class="sub">スマホ版</div>
-  <a class="pc-link" href="#">パソコン版</a>
-  <div>🎉 大切なお知らせ：スマホ用アプリが誕生しました！</div>
-  <div style="margin-top:12px;">
-    <button onclick="openPage('login')">会員サイトログイン</button>
-    <button onclick="openPage('books')">本棚</button>
-    <button onclick="openPage('terms')">利用規約</button>
-    <button onclick="openPage('plans')">料金表・ご質問</button>
-    <button onclick="openPage('los')">LOS3.01紹介</button>
+<!-- ブラウザ用：アプリ案内 -->
+<div id="installGuide">
+  <h2>📱 恋愛研究所アプリ</h2>
+  <p id="guideText"></p>
+  <div class="note">
+    ※ アプリを入れるとサイトが開けます
   </div>
-</div>
-
-<!-- 会員サイトログイン -->
-<div class="page" id="login">
-<div class="card">
-  <h1>恋愛研究所</h1>
-  <div class="sub">Member Access</div>
-
-  <div class="input-wrap">
-    <input type="password" id="pw" placeholder="パスコード">
-  </div>
-
-  <button onclick="login()">続ける</button>
-
-  <div class="status" id="msg"></div>
-  <button onclick="backTop()">トップに戻る</button>
-</div>
-</div>
-
-<!-- 本棚 -->
-<div class="page" id="books">
-  <div class="card">
-    <h1>本棚</h1>
-    <iframe src="https://read.bookcreator.com/library/-OlyvZf_fsBQQDH7NNgD"></iframe>
-    <button onclick="backTop()">トップに戻る</button>
-  </div>
-</div>
-
-<!-- 利用規約 -->
-<div class="page" id="terms">
-  <div class="card text-area">
-    <h1>利用規約</h1>
-    <p>本サイト（以下「当サイト」といいます）は、管理人が創作した恋愛物語および関連コンテンツを掲載する個人創作サイトです。…（省略）…恋愛研究所管理者</p>
-    <button onclick="backTop()">トップに戻る</button>
-  </div>
-</div>
-
-<!-- 料金表・ご質問 -->
-<div class="page" id="plans">
-<div class="card">
-<!-- HTML内容はここに挿入 -->
-<!-- コピーした会員プランHTMLをここに貼り付け -->
-<p>※ここに料金表HTMLが入ります</p>
-<button onclick="backTop()">トップに戻る</button>
-</div>
-</div>
-
-<!-- LOS3.01紹介 -->
-<div class="page" id="los">
-<div class="card">
-<!-- HTML内容はここに挿入 -->
-<p>※ここにLOS3.01紹介HTMLが入ります</p>
-<button onclick="backTop()">トップに戻る</button>
-</div>
 </div>
 
 <script>
-function openPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('top-page').style.display='none';
-  document.getElementById(id).classList.add('active');
+// アプリモード判定
+function isAppMode() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
 }
 
-function backTop(){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('top-page').style.display='block';
-}
+const guide = document.getElementById("installGuide");
+const text = document.getElementById("guideText");
+const ua = navigator.userAgent.toLowerCase();
+const isIphone = ua.includes("iphone");
+const isAndroid = ua.includes("android");
 
-/* ログイン */
-function login(){
-  const pw=document.getElementById("pw").value.trim();
-  const msg=document.getElementById("msg");
+if (isAppMode()) {
+  // ✅ アプリから起動 → 本体サイトへ
+  location.href = "https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory-app/ホーム";
+} else {
+  // ❌ ブラウザ起動 → 案内だけ表示
+  guide.style.display = "flex";
 
-  if(pw==="otameshi"||pw==="loveaffair"){
-    msg.style.color="#007aff";
-    msg.textContent="接続中…";
-    setTimeout(()=>{
-      location.href = pw==="otameshi"
-      ? "https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory/%E7%A6%81%E6%96%AD%E8%B3%87%E6%96%99%E5%AE%A4%E3%81%8A%E8%A9%A6%E3%81%97%E7%89%88"
-      : "https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory/%E7%A6%81%E6%96%AD%E8%B3%87%E6%96%99%E5%AE%A4";
-    },800);
-  }else{
-    msg.textContent="パスコードが違います";
+  if (isIphone) {
+    text.innerHTML = `
+      下の <strong>共有ボタン（□↑）</strong> を押して<br>
+      <strong>「ホーム画面に追加」</strong>してください
+    `;
+  } else if (isAndroid) {
+    text.innerHTML = `
+      右上の <strong>︙ メニュー</strong> から<br>
+      <strong>「アプリをインストール」</strong><br>
+      または <strong>「ホーム画面に追加」</strong>
+    `;
+  } else {
+    text.innerHTML = `
+      スマートフォンでアクセスしてください
+    `;
   }
 }
-
-/* アプリ通知 */
-window.addEventListener('load',()=>{
-  if(!navigator.standalone && !window.matchMedia('(display-mode: standalone)').matches){
-    const msg=document.createElement('div');
-    msg.id='app-msg';
-    msg.textContent="スマホのホーム画面に追加するとアプリのように使えます！";
-    document.body.prepend(msg);
-  }
-});
 </script>
 
 </body>
