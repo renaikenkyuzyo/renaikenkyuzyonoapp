@@ -52,10 +52,10 @@ body {
 
 <!-- ブラウザ用：アプリ案内 -->
 <div id="installGuide">
-  <h2>📱 恋愛研究所アプリ</h2>
+  <h2>📱 恋愛研究所公式アプリ</h2>
   <p id="guideText"></p>
   <div class="note">
-    ※ アプリを入れるとサイトが開けます
+    ※ アプリを入れるとサイトが開けます。
   </div>
 </div>
 
@@ -81,8 +81,8 @@ if (isAppMode()) {
 
   if (isIphone) {
     text.innerHTML = `
-      下の <strong>共有ボタン（□↑）</strong> を押して<br>
-      <strong>「ホーム画面に追加」</strong>してください
+      下の <strong>右下にある•••ボタンをクリック。その後共有ボタン（□↑）</strong> を押して<br>
+      <strong>「ホーム画面に追加」</strong>してください（右下に「もっと見る」がある場合はそこを選択してから、ホーム画面に追加を選択してください）
     `;
   } else if (isAndroid) {
     text.innerHTML = `
@@ -92,7 +92,7 @@ if (isAppMode()) {
     `;
   } else {
     text.innerHTML = `
-      スマートフォンでアクセスしてください
+      スマートフォンでアクセスしてください。スマートフォン以外ではアプリをダウンロードできません
     `;
   }
 }
