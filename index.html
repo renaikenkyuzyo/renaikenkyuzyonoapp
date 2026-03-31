@@ -5,32 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>恋愛研究所</title>
 
-<!-- PWA設定 -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffffff">
+<!-- PWA / アイコン -->
 <link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#ffffff">
 
-<!-- フォント -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-
-<script>
-/* ===== manifest をHTML内で生成 ===== */
-const manifest = {
-  name: "恋愛研究所",
-  short_name: "恋愛研究所",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#ffffff",
-  theme_color: "#ffffff",
-  icons: [
-    { src: "icon-192.png", sizes: "192x192", type: "image/png" },
-    { src: "icon-512.png", sizes: "512x512", type: "image/png" }
-  ]
-};
-const blob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
-const manifestURL = URL.createObjectURL(blob);
-document.querySelector('link[rel="manifest"]').setAttribute("href", manifestURL);
-</script>
 
 <style>
 :root{
@@ -38,14 +17,15 @@ document.querySelector('link[rel="manifest"]').setAttribute("href", manifestURL)
   --blue:#7afcff;
   --glass:rgba(255,255,255,0.7);
 }
+*{box-sizing:border-box;}
 body{
   margin:0;
   font-family:'Nunito',system-ui,-apple-system;
-  background:linear-gradient(180deg,#f2fbff,#fff);
+  background:linear-gradient(180deg,#f2fbff,#ffffff);
   color:#333;
 }
 
-/* ===== インストール案内 ===== */
+/* ===== インストール誘導 ===== */
 #installGuide{
   display:none;
   min-height:100vh;
@@ -53,12 +33,12 @@ body{
   text-align:center;
 }
 .install-box{
+  max-width:360px;
+  margin:auto;
   background:var(--glass);
   backdrop-filter:blur(20px);
   border-radius:28px;
   padding:28px;
-  max-width:360px;
-  margin:auto;
 }
 .install-title{
   font-size:32px;
@@ -67,11 +47,6 @@ body{
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.step{
-  margin-top:16px;
-  font-size:15px;
-  line-height:1.7;
-}
 
 /* ===== アプリ本体 ===== */
 #realApp{display:none;}
@@ -79,7 +54,7 @@ body{
 
 /* スプラッシュ */
 #splash{
-  position:fixed;inset:0;
+  position:fixed; inset:0;
   background:#fff;
   display:flex;
   flex-direction:column;
@@ -95,13 +70,15 @@ body{
   border-radius:14px;
   position:relative;
 }
-.heart:before,.heart:after{
-  content:"";width:80px;height:80px;
-  background:inherit;border-radius:50%;
+.heart::before,.heart::after{
+  content:"";
+  width:80px;height:80px;
+  background:inherit;
+  border-radius:50%;
   position:absolute;
 }
-.heart:before{left:-40px;}
-.heart:after{top:-40px;}
+.heart::before{left:-40px;}
+.heart::after{top:-40px;}
 @keyframes beat{
   0%,100%{transform:scale(1) rotate(45deg);}
   50%{transform:scale(1.15) rotate(45deg);}
@@ -126,24 +103,15 @@ section.active{display:block;}
   margin-bottom:16px;
 }
 
-/* タブバー（Apple風） */
-.tabbar{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  height:80px;
-  background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(24px);
-  display:flex;
-  border-top:1px solid rgba(255,255,255,0.5);
+/* 入力 */
+input{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  margin-bottom:12px;
 }
-.tab{
-  flex:1;
-  text-align:center;
-  padding-top:12px;
-  font-size:12px;
-  color:#888;
-}
-.tab.active{color:#ff7eb3;font-weight:700}
 
 /* ボタン */
 button{
@@ -154,54 +122,122 @@ button{
   background:linear-gradient(90deg,var(--pink),var(--blue));
   color:#fff;
   font-weight:700;
-  margin-top:10px;
+}
+
+/* iframe */
+iframe{
+  width:100%;
+  height:65vh;
+  border:none;
+  border-radius:18px;
+}
+
+/* ===== タブバー（アイコン＋文字） ===== */
+.tabbar{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:82px;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(24px);
+  display:flex;
+  border-top:1px solid rgba(0,0,0,0.05);
+}
+.tab{
+  flex:1;
+  text-align:center;
+  padding-top:8px;
+  font-size:11px;
+  color:#888;
+}
+.tab span{
+  display:block;
+  font-size:22px;
+}
+.tab.active{
+  color:#ff7eb3;
+  font-weight:700;
 }
 </style>
 </head>
 
 <body>
 
-<!-- インストール案内 -->
+<!-- ===== インストール案内 ===== -->
 <div id="installGuide">
   <div class="install-box">
     <div class="install-title">恋愛研究所</div>
-    <div id="installSteps" class="step"></div>
+    <p id="installText"></p>
   </div>
 </div>
 
-<!-- アプリ -->
+<!-- ===== アプリ ===== -->
 <div id="realApp">
+
   <div id="splash">
     <div class="heart"></div>
     <div class="logo">恋愛研究所</div>
   </div>
 
   <div class="app">
+
+    <!-- ホーム -->
     <section id="home" class="active">
-      <div class="card">ようこそ、恋愛研究所へ 💖</div>
-    </section>
-
-    <section id="love">
-      <div class="card">恋愛は、安心できる関係がいちばん大切。</div>
-    </section>
-
-    <section id="settings">
       <div class="card">
-        <b>通知設定</b><br>
-        状態：<span id="notifyState"></span>
+        ようこそ、恋愛研究所へ 💖
       </div>
       <div class="card">
-        <b>アプリ情報</b><br>
+        <details>
+          <summary>利用規約</summary>
+          本アプリは恋愛に関する一般的な情報を提供します。
+        </details>
+      </div>
+    </section>
+
+    <!-- ログイン -->
+    <section id="login">
+      <div class="card">
+        <input type="password" id="pw" placeholder="パスワード">
+        <button onclick="login()">ログイン</button>
+      </div>
+    </section>
+
+    <!-- 恋愛 -->
+    <section id="love">
+      <div class="card">
+        ・自分の気持ちを大切に<br>
+        ・安心できる関係を選ぶ<br>
+        ・無理しない恋愛を
+      </div>
+    </section>
+
+    <!-- 本棚 -->
+    <section id="books">
+      <div class="card">
+        <iframe src="https://read.bookcreator.com/library/-OlyvZf_fsBQQDH7NNgD"></iframe>
+      </div>
+    </section>
+
+    <!-- 設定 -->
+    <section id="settings">
+      <div class="card">
+        通知状態：<span id="notifyState"></span>
+      </div>
+      <div class="card">
         恋愛研究所 v1.0
       </div>
     </section>
+
   </div>
 
+  <!-- タブ -->
   <div class="tabbar">
-    <div class="tab active" onclick="tab('home',this)">ホーム</div>
-    <div class="tab" onclick="tab('love',this)">恋愛</div>
-    <div class="tab" onclick="tab('settings',this)">設定</div>
+    <div class="tab active" onclick="tab('home',this)"><span>🏠</span>ホーム</div>
+    <div class="tab" onclick="tab('login',this)"><span>🔐</span>ログイン</div>
+    <div class="tab" onclick="tab('love',this)"><span>💖</span>恋愛</div>
+    <div class="tab" onclick="tab('books',this)"><span>📚</span>本棚</div>
+    <div class="tab" onclick="tab('settings',this)"><span>⚙️</span>設定</div>
   </div>
+
 </div>
 
 <script>
@@ -213,12 +249,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(isApp){
     realApp.style.display="block";
     setTimeout(()=>splash.style.display="none",2000);
-    notifyState.textContent = Notification.permission;
+    notifyState.textContent = Notification.permission || "未設定";
   }else{
     installGuide.style.display="block";
-    installSteps.innerHTML = isiOS
-      ? "① 共有ボタンをタップ<br>②「ホーム画面に追加」<br>③ アプリとして起動"
-      : "① メニューをタップ<br>②「ホーム画面に追加」<br>③ アプリとして起動";
+    installText.innerHTML = isiOS
+      ? "Safariの共有ボタンから<br><b>ホーム画面に追加</b>してください"
+      : "Chromeのメニューから<br><b>ホーム画面に追加</b>してください";
   }
 });
 
@@ -227,6 +263,14 @@ function tab(id,el){
   document.getElementById(id).classList.add("active");
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   el.classList.add("active");
+}
+
+function login(){
+  if(pw.value==="loveaffair"){
+    location.href="https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory-app/%E4%BC%9A%E5%93%A1%E3%82%B5%E3%82%A4%E3%83%88";
+  }else{
+    alert("パスワードが違います");
+  }
 }
 </script>
 
