@@ -2,194 +2,142 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>恋愛研究所</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- PWA / アイコン -->
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#ffffff">
-
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="icon-192.png">
 
 <style>
 :root{
-  --pink:#ff7eb3;
-  --blue:#7afcff;
-  --glass:rgba(255,255,255,0.7);
+  --glass: rgba(255,255,255,0.25);
+  --blur: blur(20px);
+  --pink:#ff7ac8;
+  --blue:#7ad7ff;
 }
-*{box-sizing:border-box;}
 body{
   margin:0;
-  font-family:'Nunito',system-ui,-apple-system;
-  background:linear-gradient(180deg,#f2fbff,#ffffff);
-  color:#333;
+  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui;
+  background:linear-gradient(180deg,#f8fbff,#f1f5ff);
+  color:#222;
+}
+body.dark{
+  background:#0f172a;
+  color:#fff;
 }
 
-/* ===== インストール誘導 ===== */
-#installGuide{
-  display:none;
-  min-height:100vh;
-  padding:40px 20px;
-  text-align:center;
-}
-.install-box{
-  max-width:360px;
-  margin:auto;
-  background:var(--glass);
-  backdrop-filter:blur(20px);
-  border-radius:28px;
-  padding:28px;
-}
-.install-title{
-  font-size:32px;
-  font-weight:700;
-  background:linear-gradient(90deg,var(--pink),var(--blue));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* ===== アプリ本体 ===== */
-#realApp{display:none;}
-.app{min-height:100vh;padding-bottom:90px}
-
-/* スプラッシュ */
+/* splash */
 #splash{
   position:fixed; inset:0;
-  background:#fff;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  z-index:100;
+  background:#fff;
+  z-index:999;
 }
 .heart{
   width:80px;height:80px;
-  background:linear-gradient(135deg,var(--pink),var(--blue));
-  transform:rotate(45deg);
-  animation:beat 1.2s infinite;
-  border-radius:14px;
-  position:relative;
+  background:linear-gradient(45deg,var(--pink),var(--blue));
+  transform:rotate(-45deg);
+  animation:pulse 1.2s infinite;
 }
-.heart::before,.heart::after{
-  content:"";
+.heart:before,.heart:after{
+  content:"";position:absolute;
   width:80px;height:80px;
-  background:inherit;
-  border-radius:50%;
-  position:absolute;
+  background:inherit;border-radius:50%;
 }
-.heart::before{left:-40px;}
-.heart::after{top:-40px;}
-@keyframes beat{
-  0%,100%{transform:scale(1) rotate(45deg);}
-  50%{transform:scale(1.15) rotate(45deg);}
+.heart:before{top:-40px;left:0}
+.heart:after{left:40px;top:0}
+@keyframes pulse{
+  0%,100%{transform:scale(1) rotate(-45deg)}
+  50%{transform:scale(1.1) rotate(-45deg)}
 }
-.logo{
-  margin-top:24px;
+#title{
+  margin-top:30px;
   font-size:32px;
   font-weight:700;
   background:linear-gradient(90deg,var(--pink),var(--blue));
   -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  color:transparent;
 }
 
-/* セクション */
-section{display:none;padding:20px;}
-section.active{display:block;}
-.card{
+/* install guide */
+#installGuide{
+  position:fixed; inset:0;
+  background:#fff;
+  padding:24px;
+  display:none;
+}
+.guideBox{
+  margin-top:80px;
   background:var(--glass);
-  backdrop-filter:blur(20px);
-  border-radius:22px;
-  padding:18px;
-  margin-bottom:16px;
+  backdrop-filter:var(--blur);
+  border-radius:20px;
+  padding:20px;
 }
 
-/* 入力 */
-input{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  margin-bottom:12px;
+/* main */
+#app{display:none; padding-bottom:90px}
+.card{
+  margin:16px;
+  padding:16px;
+  border-radius:20px;
+  background:var(--glass);
+  backdrop-filter:var(--blur);
 }
 
-/* ボタン */
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(90deg,var(--pink),var(--blue));
-  color:#fff;
-  font-weight:700;
-}
-
-/* iframe */
-iframe{
-  width:100%;
-  height:65vh;
-  border:none;
-  border-radius:18px;
-}
-
-/* ===== タブバー（アイコン＋文字） ===== */
-.tabbar{
+/* tabs */
+#tabs{
   position:fixed;
-  bottom:0;left:0;right:0;
-  height:82px;
-  background:rgba(255,255,255,0.85);
-  backdrop-filter:blur(24px);
+  bottom:0; left:0; right:0;
+  height:80px;
   display:flex;
-  border-top:1px solid rgba(0,0,0,0.05);
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(25px);
+  border-top:1px solid #ddd;
 }
 .tab{
   flex:1;
   text-align:center;
+  font-size:12px;
   padding-top:8px;
-  font-size:11px;
-  color:#888;
 }
-.tab span{
-  display:block;
-  font-size:22px;
-}
-.tab.active{
-  color:#ff7eb3;
-  font-weight:700;
-}
+.tab span{display:block;font-size:24px}
+
+/* hidden */
+.page{display:none}
+.page.active{display:block}
 </style>
 </head>
 
 <body>
 
-<!-- ===== インストール案内 ===== -->
+<!-- splash -->
+<div id="splash">
+  <div class="heart"></div>
+  <div id="title">恋愛研究所</div>
+</div>
+
+<!-- install -->
 <div id="installGuide">
-  <div class="install-box">
-    <div class="install-title">恋愛研究所</div>
-    <p id="installText"></p>
+  <div class="guideBox">
+    <h2>📱 アプリにしてください</h2>
+    <p id="guideText"></p>
   </div>
 </div>
 
-<!-- ===== アプリ ===== -->
-<div id="realApp">
+<!-- app -->
+<div id="app">
 
-  <div id="splash">
-    <div class="heart"></div>
-    <div class="logo">恋愛研究所</div>
-  </div>
-
-  <div class="app">
-
-    <!-- ホーム -->
-    <section id="home" class="active">
-      <div class="card">
-        ようこそ、恋愛研究所へ 💖
-        恋愛の世界を、この恋愛研究所アプリで！
-      </div>
-      <div class="card">
-        <details>
-          <summary>利用規約</summary>
-          本サイト（以下「当サイト」といいます）は、管理人が創作した恋愛物語および関連コンテンツを掲載する個人創作サイトです。
+  <div id="home" class="page active">
+    <div class="card">
+      <h2>🏠 ホーム</h2>
+      <details>
+        <summary>利用規約</summary>
+        <p>本サイト（以下「当サイト」といいます）は、管理人が創作した恋愛物語および関連コンテンツを掲載する個人創作サイトです。
 当サイトをご利用いただく前に、以下の利用規約（以下「本規約」といいます）をよくお読みください。
 当サイトを閲覧・利用した時点で、利用者は本規約に同意したものとみなします。また、本規約は管理者により、事前の予告等はなしに変更する場合があります。必ず週に１度は確認するようによろしくお願いします。
 
@@ -271,89 +219,103 @@ iframe{
 変更後に当サイトを利用した場合、利用者は変更後の規約に同意したものとみなされます。
 
 最終更新日：2026年3月11日
-恋愛研究所管理者
-        </details>
-      </div>
-    </section>
-
-    <!-- ログイン -->
-    <section id="login">
-      <div class="card">
-        <input type="password" id="pw" placeholder="パスワード">
-        <button onclick="login()">ログイン</button>
-      </div>
-    </section>
-
-    <!-- 恋愛 -->
-    <section id="love">
-      <div class="card">
-        ・恋はチキってちゃダメだよ！！<br>
-        ・中学生の恋愛は無理ない範囲で<br>
-        ・恋愛研究所のサイトを有意義に使ってくださいね！
-      </div>
-    </section>
-
-    <!-- 本棚 -->
-    <section id="books">
-      <div class="card">
-        <iframe src="https://read.bookcreator.com/library/-OlyvZf_fsBQQDH7NNgD"></iframe>
-      </div>
-    </section>
-
-    <!-- 設定 -->
-    <section id="settings">
-      <div class="card">
-        通知状態：<span id="notifyState"></span>
-      </div>
-      <div class="card">
-        LOS３.０１
-      </div>
-    </section>
-
+恋愛研究所管理者</p>
+      </details>
+    </div>
   </div>
 
-  <!-- タブ -->
-  <div class="tabbar">
-    <div class="tab active" onclick="tab('home',this)"><span>🏠</span>ホーム</div>
-    <div class="tab" onclick="tab('login',this)"><span>🔐</span>ログイン</div>
-    <div class="tab" onclick="tab('love',this)"><span>💖</span>恋愛</div>
-    <div class="tab" onclick="tab('books',this)"><span>📚</span>本棚</div>
-    <div class="tab" onclick="tab('settings',this)"><span>⚙️</span>設定</div>
+  <div id="login" class="page">
+    <div class="card">
+      <h2>🔐 会員ログイン</h2>
+      <input type="password" id="pw" placeholder="パスワード">
+      <button onclick="login()">ログイン</button>
+    </div>
+  </div>
+
+  <div id="love" class="page">
+    <div class="card">
+      <h2>💖 恋愛ゲーム</h2>
+      <p id="gameText">今日の選択は？</p>
+      <button onclick="game()">選ぶ</button>
+    </div>
+  </div>
+
+  <div id="books" class="page">
+    <iframe src="https://read.bookcreator.com/library/-OlyvZf_fsBQQDH7NNgD"
+      style="width:100%;height:70vh;border:none;border-radius:20px"></iframe>
+  </div>
+
+  <div id="settings" class="page">
+    <div class="card">
+      <h2>⚙️ 設定</h2>
+      <button onclick="toggleDark()">ダークモード切替</button><br><br>
+      <button onclick="requestNotify()">通知を許可</button>
+    </div>
   </div>
 
 </div>
 
+<!-- tabs -->
+<div id="tabs">
+  <div class="tab" onclick="openPage('home')"><span>🏠</span>ホーム</div>
+  <div class="tab" onclick="openPage('login')"><span>🔐</span>ログイン</div>
+  <div class="tab" onclick="openPage('love')"><span>💖</span>恋愛</div>
+  <div class="tab" onclick="openPage('books')"><span>📚</span>本棚</div>
+  <div class="tab" onclick="openPage('settings')"><span>⚙️</span>設定</div>
+</div>
+
 <script>
-const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-const isAndroid=/android/i.test(navigator.userAgent);
-const isApp=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-document.addEventListener("DOMContentLoaded",()=>{
-  if(isApp){
-    realApp.style.display="block";
-    setTimeout(()=>splash.style.display="none",2000);
-    notifyState.textContent = Notification.permission || "未設定";
-  }else{
+setTimeout(()=>{
+  splash.style.display="none";
+  if(!isStandalone){
     installGuide.style.display="block";
-    installText.innerHTML = isiOS
-      ? "Safariの右下にある•••を押します。その後、共有をクリック。ホーム画面に追加が表示されない場合は、もっとみるを選択。<br><b>ホーム画面に追加</b>を押してください"
-      : "Chromeのメニューから<br><b>ホーム画面に追加</b>してください";
+    guideText.innerText = /iphone|ipad/i.test(navigator.userAgent)
+      ? "Safariの右下にある•••を選択。共有を選択。（もっと見るを選択）ホーム画面に追加を選択。"
+      : "Chromeの︙ → ホーム画面に追加";
+  }else{
+    app.style.display="block";
   }
-});
+},1500);
 
-function tab(id,el){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  el.classList.add("active");
+function openPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
 function login(){
   if(pw.value==="loveaffair"){
     location.href="https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory-app/%E4%BC%9A%E5%93%A1%E3%82%B5%E3%82%A4%E3%83%88";
-  }else{
-    alert("パスワードが違います。やり直してください。");
-  }
+  }else alert("パスワードが違います");
+}
+
+function game(){
+  const msgs=["今日は素直が吉","連絡は短く優しく","焦らないのが正解"];
+  gameText.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+function requestNotify(){
+  Notification.requestPermission().then(p=>{
+    if(p==="granted"){
+      notifySchedule();
+    }
+  });
+}
+
+function notifySchedule(){
+  const quotes=[
+    "恋は信じることから始まる",
+    "大切なのは思いやり",
+    "自分を大切にできる人が愛される"
+  ];
+  setInterval(()=>{
+    new Notification("恋愛研究所",{body:quotes[Math.floor(Math.random()*quotes.length)]});
+  },1000*60*60*12);
 }
 </script>
 
