@@ -2,187 +2,232 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>恋愛研究所</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- アプリアイコン・PWA設定（STEP3 完了） -->
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<!-- PWA設定 -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ff6ca3">
+<meta name="theme-color" content="#ffffff">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- フォント -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+<script>
+/* ===== manifest をHTML内で生成 ===== */
+const manifest = {
+  name: "恋愛研究所",
+  short_name: "恋愛研究所",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#ffffff",
+  theme_color: "#ffffff",
+  icons: [
+    { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+    { src: "icon-512.png", sizes: "512x512", type: "image/png" }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
+const manifestURL = URL.createObjectURL(blob);
+document.querySelector('link[rel="manifest"]').setAttribute("href", manifestURL);
+</script>
 
 <style>
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
+:root{
+  --pink:#ff7eb3;
+  --blue:#7afcff;
+  --glass:rgba(255,255,255,0.7);
+}
+body{
+  margin:0;
+  font-family:'Nunito',system-ui,-apple-system;
+  background:linear-gradient(180deg,#f2fbff,#fff);
+  color:#333;
 }
 
-/* ハートアニメーション */
-#heartAnimation {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
+/* ===== インストール案内 ===== */
+#installGuide{
+  display:none;
+  min-height:100vh;
+  padding:40px 20px;
+  text-align:center;
+}
+.install-box{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border-radius:28px;
+  padding:28px;
+  max-width:360px;
+  margin:auto;
+}
+.install-title{
+  font-size:32px;
+  font-weight:700;
+  background:linear-gradient(90deg,var(--pink),var(--blue));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.step{
+  margin-top:16px;
+  font-size:15px;
+  line-height:1.7;
 }
 
-#heartAnimation svg {
-  width: 200px;
-  height: 200px;
+/* ===== アプリ本体 ===== */
+#realApp{display:none;}
+.app{min-height:100vh;padding-bottom:90px}
+
+/* スプラッシュ */
+#splash{
+  position:fixed;inset:0;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:100;
+}
+.heart{
+  width:80px;height:80px;
+  background:linear-gradient(135deg,var(--pink),var(--blue));
+  transform:rotate(45deg);
+  animation:beat 1.2s infinite;
+  border-radius:14px;
+  position:relative;
+}
+.heart:before,.heart:after{
+  content:"";width:80px;height:80px;
+  background:inherit;border-radius:50%;
+  position:absolute;
+}
+.heart:before{left:-40px;}
+.heart:after{top:-40px;}
+@keyframes beat{
+  0%,100%{transform:scale(1) rotate(45deg);}
+  50%{transform:scale(1.15) rotate(45deg);}
+}
+.logo{
+  margin-top:24px;
+  font-size:32px;
+  font-weight:700;
+  background:linear-gradient(90deg,var(--pink),var(--blue));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-#heartAnimation path {
-  fill: none;
-  stroke: #ff6ca3;
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: draw 5s ease-in-out forwards;
+/* セクション */
+section{display:none;padding:20px;}
+section.active{display:block;}
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:16px;
 }
 
-@keyframes draw {
-  0%, 40% { stroke-dashoffset: 300; }
-  55% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 0; }
+/* タブバー（Apple風） */
+.tabbar{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:80px;
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(24px);
+  display:flex;
+  border-top:1px solid rgba(255,255,255,0.5);
 }
-
-/* ロゴ文字 */
-#logoText {
-  position: absolute;
-  font-size: 52px;
-  font-weight: 700;
-  opacity: 0;
-  text-align: center;
-  background: linear-gradient(45deg, #ff6ca3, #6cd3ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transform: scale(0.4);
-  transition: transform 2.5s ease, opacity 1.5s ease;
-  z-index: 20;
+.tab{
+  flex:1;
+  text-align:center;
+  padding-top:12px;
+  font-size:12px;
+  color:#888;
 }
+.tab.active{color:#ff7eb3;font-weight:700}
 
-/* アプリ案内 */
-#installGuide {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #1f1f3a, #3a3a7a);
-  color: #fff;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 24px;
-  z-index: 30;
-}
-
-#installGuide h2 {
-  font-size: 22px;
-  margin-bottom: 12px;
-}
-
-#installGuide p {
-  font-size: 15px;
-  line-height: 1.7;
-}
-
-.note {
-  font-size: 12px;
-  opacity: 0.8;
-  margin-top: 16px;
+/* ボタン */
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(90deg,var(--pink),var(--blue));
+  color:#fff;
+  font-weight:700;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ハート -->
-<div id="heartAnimation">
-  <svg viewBox="0 0 100 100">
-    <path d="
-      M50 70
-      C35 55, 20 40, 25 25
-      C30 10, 50 15, 50 30
-      C50 15, 70 10, 75 25
-      C80 40, 65 55, 50 70
-    " />
-  </svg>
-</div>
-
-<!-- ロゴ -->
-<div id="logoText">恋愛研究所</div>
-
 <!-- インストール案内 -->
 <div id="installGuide">
-  <h2>📱 恋愛研究所公式アプリ</h2>
-  <p id="guideText"></p>
-  <div class="note">※ アプリを入れるとサイトが開けます。LOS3.01</div>
+  <div class="install-box">
+    <div class="install-title">恋愛研究所</div>
+    <div id="installSteps" class="step"></div>
+  </div>
+</div>
+
+<!-- アプリ -->
+<div id="realApp">
+  <div id="splash">
+    <div class="heart"></div>
+    <div class="logo">恋愛研究所</div>
+  </div>
+
+  <div class="app">
+    <section id="home" class="active">
+      <div class="card">ようこそ、恋愛研究所へ 💖</div>
+    </section>
+
+    <section id="love">
+      <div class="card">恋愛は、安心できる関係がいちばん大切。</div>
+    </section>
+
+    <section id="settings">
+      <div class="card">
+        <b>通知設定</b><br>
+        状態：<span id="notifyState"></span>
+      </div>
+      <div class="card">
+        <b>アプリ情報</b><br>
+        恋愛研究所 v1.0
+      </div>
+    </section>
+  </div>
+
+  <div class="tabbar">
+    <div class="tab active" onclick="tab('home',this)">ホーム</div>
+    <div class="tab" onclick="tab('love',this)">恋愛</div>
+    <div class="tab" onclick="tab('settings',this)">設定</div>
+  </div>
 </div>
 
 <script>
-const heart = document.getElementById("heartAnimation");
-const logo = document.getElementById("logoText");
-const guide = document.getElementById("installGuide");
-const text = document.getElementById("guideText");
+const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+const isAndroid=/android/i.test(navigator.userAgent);
+const isApp=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 
-const ua = navigator.userAgent.toLowerCase();
-const isIphone = ua.includes("iphone");
-const isAndroid = ua.includes("android");
+document.addEventListener("DOMContentLoaded",()=>{
+  if(isApp){
+    realApp.style.display="block";
+    setTimeout(()=>splash.style.display="none",2000);
+    notifyState.textContent = Notification.permission;
+  }else{
+    installGuide.style.display="block";
+    installSteps.innerHTML = isiOS
+      ? "① 共有ボタンをタップ<br>②「ホーム画面に追加」<br>③ アプリとして起動"
+      : "① メニューをタップ<br>②「ホーム画面に追加」<br>③ アプリとして起動";
+  }
+});
 
-function isAppMode() {
-  return window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
+function tab(id,el){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
 }
-
-/* ハート終了 → ロゴ表示 */
-setTimeout(() => {
-  heart.style.transition = "opacity 0.6s ease";
-  heart.style.opacity = 0;
-
-  logo.style.opacity = 1;
-  logo.style.transform = "scale(1)";
-
-  /* ロゴ拡大 → フェードアウト → 遷移 */
-  setTimeout(() => {
-    logo.style.transition = "transform 1.5s ease, opacity 1.5s ease";
-    logo.style.transform = "scale(1.35)";
-    logo.style.opacity = 0;
-
-    setTimeout(() => {
-      if (isAppMode()) {
-        location.href = "https://sites.google.com/jhs.u-ryukyu.ac.jp/lovestory-app/ホーム";
-      } else {
-        guide.style.display = "flex";
-
-        if (isIphone) {
-          text.innerHTML = `
-            右下の <strong>•••ボタンをクリック。（もっと見るを押してから）共有ボタン（□↑）</strong> から<br>
-            <strong>「ホーム画面に追加」</strong>してください
-          `;
-        } else if (isAndroid) {
-          text.innerHTML = `
-            右上の <strong>︙ メニュー</strong> から<br>
-            <strong>「アプリをインストール」</strong><br>
-            または <strong>「ホーム画面に追加」</strong>
-          `;
-        } else {
-          text.innerHTML = `
-            スマートフォンでアクセスしてください。現在、スマートフォンにしか対応していません。
-          `;
-        }
-      }
-    }, 1500);
-
-  }, 1800);
-
-}, 5000);
 </script>
 
 </body>
