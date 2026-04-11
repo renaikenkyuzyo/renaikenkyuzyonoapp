@@ -2,388 +2,22 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>恋愛研究所</title>
-    
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="恋愛研究所">
     <link rel="apple-touch-icon" href="icon-192.png">
-    
-    <link rel="manifest" id="my-manifest">
-
-    <style>
-        :root {
-            --primary-pink: #ff75c3;
-            --primary-purple: #9d50bb;
-            --glass-bg: rgba(255, 255, 255, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --text-main: #2d3436;
-            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
-            --safe-area-bottom: env(safe-area-inset-bottom);
-        }
-
-        /* ダークモード設定 */
-        body.dark-mode {
-            --glass-bg: rgba(30, 30, 30, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --bg-gradient: linear-gradient(135deg, #2d3436 0%, #000000 100%);
-        }
-
-        /* 高コントラスト設定 */
-        body.high-contrast {
-            --glass-bg: rgba(255, 255, 255, 0.9);
-            --text-main: #000000;
-            --primary-pink: #ff0080;
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            height: 100vh;
-            overflow: hidden;
-            transition: background 0.3s ease;
-        }
-
-        /* フォントサイズ設定 */
-        body.font-small { font-size: 14px; }
-        body.font-medium { font-size: 16px; }
-        body.font-large { font-size: 20px; }
-
-        /* スプラッシュ画面 */
-        #splash-screen {
-            position: fixed;
-            inset: 0;
-            background: white;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
-        }
-
-        .heart-svg {
-            width: 120px;
-            height: 120px;
-            fill: url(#heartGradient);
-            filter: drop-shadow(0 0 15px rgba(255, 117, 195, 0.6));
-            animation: heartBeat 1.5s infinite ease-in-out;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .splash-title {
-            margin-top: 20px;
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--primary-pink), var(--primary-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 1s forwards 0.5s;
-        }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 案内画面 (ブラウザ用) */
-        #install-guide {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9000;
-            padding: 40px 20px;
-            text-align: center;
-            background: var(--bg-gradient);
-            overflow-y: auto;
-        }
-
-        .guide-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        /* メインコンテンツレイアウト */
-        #app-shell {
-            display: none; /* PWA判定後に表示 */
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            padding-top: 60px; /* iOS Status bar */
-            padding-bottom: 100px; /* Tab bar area */
-        }
-
-        /* ガラスUIカード */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-        }
-
-        /* タブバー */
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: calc(70px + var(--safe-area-bottom));
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: var(--safe-area-bottom);
-            border-top: 0.5px solid rgba(0,0,0,0.1);
-            z-index: 8000;
-        }
-
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 10px;
-            color: #888;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .tab-item.active {
-            color: var(--primary-pink);
-        }
-
-        .tab-icon {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        /* 各タブセクションの制御 */
-        .tab-content { display: none; animation: fadeIn 0.4s; }
-        .tab-content.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* 入力フォーム */
-        input[type="password"] {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255,255,255,0.5);
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .btn {
-            background: linear-gradient(90deg, var(--primary-pink), var(--primary-purple));
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        /* 本棚 iframe */
-        .iframe-container {
-            width: 100%;
-            height: calc(100vh - 200px);
-            border-radius: 15px;
-            overflow: hidden;
-            background: white;
-        }
-
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* 利用規約バー */
-        .terms-box {
-            height: 100px;
-            overflow-y: scroll;
-            background: rgba(0,0,0,0.05);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        /* トグルスイッチ(iOS風) */
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 0.5px solid var(--glass-border);
-        }
-
-    </style>
-</head>
-<body class="font-medium">
-
-    <div id="splash-screen">
-        <svg class="heart-svg" viewBox="0 0 32 32">
-            <defs>
-                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#ff75c3" />
-                    <stop offset="100%" style="stop-color:#9d50bb" />
-                </linearGradient>
-            </defs>
-            <path d="M16 28.5L14.1 26.7C7.3 20.6 2.8 16.5 2.8 11.5 2.8 7.4 6 4.2 10.1 4.2c2.3 0 4.5 1.1 5.9 2.8 1.4-1.7 3.6-2.8 5.9-2.8 4.1 0 7.3 3.2 7.3 7.3 0 5-4.5 9.1-11.3 15.2L16 28.5z"/>
-        </svg>
-        <div class="splash-title">恋愛研究所</div>
-    </div>
-
-    <div id="install-guide">
-        <div class="guide-card">
-            <h2 id="guide-title">アプリをインストール</h2>
-            <p id="guide-text">このアプリをフル機能で利用するには、ホーム画面に追加してください。</p>
-            <div id="guide-steps" style="text-align: left; margin: 20px 0;">
-                </div>
-            <button class="btn" onclick="location.reload()">インストール済みの方はこちら</button>
-        </div>
-    </div>
-
-    <div id="app-shell">
-        <main>
-            <section id="tab-home" class="tab-content active">
-                <div class="glass-card">
-                    <h2 style="font-size: 1.5rem; margin-top: 0;">恋は目で見るものではなく、<br>心で見るもの</h2>
-                    <p>「恋愛研究所」へようこそ。ここでは最新の心理学とデータに基づき、あなたの恋を科学的にサポートします。</p>
-                </div>
-                <div class="glass-card">
-                    <h3>利用規約</h3>
-                    <div class="terms-box">
-                        この利用規約は、今後変更されることがあります。
-                        第一条（目的）：本アプリは個人の恋愛をサポートするための学習用アプリです。
-                        第二条（禁止事項）：不正アクセス、データの改ざん、誹謗中傷を禁止します。
-                        第三条（プライバシー）：入力された情報は端末内にのみ保存され、外部送信されません。
-                        ...（以下、詳細文章）
-                    </div>
-                </div>
-            </section>
-
-            <section id="tab-login" class="tab-content">
-                <div class="glass-card">
-                    <h2>会員限定アクセス</h2>
-                    <p>パスワードを入力して、特別コンテンツへアクセスしてください。</p>
-                    <input type="password" id="login-pass" placeholder="Password...">
-                    <button class="btn" onclick="checkLogin()">ログイン</button>
-                    <p id="login-error" style="color: #ff4757; font-size: 14px; display: none; margin-top: 10px;">
-                        パスワードが違います。もう一度試してみてね。
-                    </p>
-                </div>
-            </section>
-
-            <section id="tab-love" class="tab-content">
-                <div class="glass-card">
-                    <h3>💡 恋愛豆知識</h3>
-                    <p>「吊り橋効果」は、不安や恐怖によるドキドキを恋によるドキドキと脳が勘違いすること。デートには遊園地がおすすめ！</p>
-                </div>
-                <div class="glass-card">
-                    <h3>💄 モテ・アドバイス</h3>
-                    <p>相手の仕草をさりげなく真似する「ミラーリング」は、親近感を抱かせる強力なテクニックです。</p>
-                </div>
-                <div class="glass-card">
-                    <h3>💌 LINEの心理学</h3>
-                    <p>返信のペースは相手に合わせるのが基本。早すぎず、遅すぎず、心地よいリズムを作りましょう。</p>
-                </div>
-            </section>
-
-            <section id="tab-books" class="tab-content">
-                <div class="glass-card" style="padding: 10px;">
-                    <div class="iframe-container">
-                        <iframe src="https://ycomomama.com/bookcreat/"></iframe>
-                    </div>
-                </div>
-            </section>
-
-            <section id="tab-settings" class="tab-content">
-                <div class="glass-card">
-                    <h2>設定</h2>
-                    <div class="setting-row">
-                        <span>ダークモード</span>
-                        <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()">
-                    </div>
-                    <div class="setting-row">
-                        <span>通知許可</span>
-                        <input type="checkbox" id="notify-toggle" onchange="requestNotify()">
-                    </div>
-                    <div class="setting-row">
-                        <span>文字サイズ</span>
-                        <select onchange="changeFontSize(this.value)">
-                            <option value="font-small">小</option>
-                            <option value="font-medium" selected>中</option>
-                            <option value="font-large">大</option>
-                        </select>
-                    </div>
-                    <div class="setting-row">
-                        <span>色覚サポート</span>
-                        <input type="checkbox" onchange="toggleHighContrast()">
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <nav class="tab-bar">
-            <a href="javascript:void(0)" class="tab-item active" onclick="switchTab('home')">
-                <span class="tab-icon">🏠</span><span>ホーム</span>
-            </a>
-            <a href="javascript:void(0)" class="tab-item" onclick="switchTab('login')">
-                <span class="tab-icon">🔑</span><span>ログイン</span>
-            </a>
-            <a href="javascript:void(0)" class="tab-item" onclick="switchTab('love')">
-                <span class="tab-icon">💖</span><span>恋愛</span>
-            </a>
-            <a href="javascript:void(0)" class="tab-item" onclick="switchTab('books')">
-                <span class="tab-icon">📚</span><span>本棚</span>
-            </a>
-            <a href="javascript:void(0)" class="tab-item" onclick="switchTab('settings')">
-                <span class="tab-icon">⚙️</span><span>設定</span>
-            </a>
-        </nav>
-    </div>
 
     <script>
-        /**
-         * 1. PWA マニフェストの動的生成
-         */
         const manifest = {
             "name": "恋愛研究所",
-            "short_name": "恋愛ラボ",
+            "short_name": "恋愛研",
             "start_url": ".",
             "display": "standalone",
             "background_color": "#ffffff",
-            "theme_color": "#ff75c3",
+            "theme_color": "#ff85a2",
             "icons": [
                 { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
                 { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
@@ -392,126 +26,481 @@
         const stringManifest = JSON.stringify(manifest);
         const blob = new Blob([stringManifest], {type: 'application/json'});
         const manifestURL = URL.createObjectURL(blob);
-        document.querySelector('#my-manifest').setAttribute('href', manifestURL);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestURL;
+        document.head.appendChild(link);
+    </script>
 
-        /**
-         * 2. PWA 起動判定 & インストール案内
-         */
-        window.addEventListener('DOMContentLoaded', () => {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            const ua = window.navigator.userAgent.toLowerCase();
-            const guide = document.getElementById('install-guide');
-            const app = document.getElementById('app-shell');
-            const steps = document.getElementById('guide-steps');
-
-            // 3秒後にスプラッシュを消す
-            setTimeout(() => {
-                document.getElementById('splash-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('splash-screen').style.visibility = 'hidden';
-                }, 800);
-
-                if (!isStandalone) {
-                    // ブラウザ表示の場合
-                    guide.style.display = 'block';
-                    app.style.display = 'none';
-
-                    if (/iphone|ipad|ipod/.test(ua)) {
-                        steps.innerHTML = `
-                            1. Safariブラウザの下部中央にある <b>共有ボタン(↑)</b> をタップします。<br><br>
-                            2. メニューをスクロールして <b>「ホーム画面に追加」</b> を選択します。<br><br>
-                            3. 右上の <b>「追加」</b> をタップして完了です。
-                        `;
-                    } else {
-                        steps.innerHTML = `
-                            1. ブラウザの右上にある <b>メニュー(⋮)</b> をタップします。<br><br>
-                            2. <b>「アプリをインストール」</b> または <b>「ホーム画面に追加」</b> を選択します。
-                        `;
-                    }
-                } else {
-                    // アプリとして起動した場合
-                    guide.style.display = 'none';
-                    app.style.display = 'flex';
-                }
-            }, 3000);
-        });
-
-        /**
-         * 3. タブ切り替えロジック
-         */
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.currentTarget.classList.add('active');
+    <style>
+        :root {
+            --primary-pink: #ff85a2;
+            --primary-purple: #a18cd1;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-color: #333;
+            --bg-gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            --font-size: 16px;
         }
 
-        /**
-         * 4. ログイン機能
-         */
+        /* ダークモード設定 */
+        body.dark-mode {
+            --glass-bg: rgba(0, 0, 0, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #fff;
+            --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+        }
+
+        /* 高コントラスト設定 */
+        body.high-contrast {
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #000;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-color);
+            overflow: hidden;
+            font-size: var(--font-size);
+        }
+
+        /* --- Splash Screen --- */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .heart-svg {
+            width: 100px;
+            height: 100px;
+            fill: url(#heartGradient);
+            filter: drop-shadow(0 0 10px rgba(255,133,162,0.5));
+            animation: heartBeat 1.5s infinite ease-out;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+            60% { transform: scale(1); }
+        }
+
+        .splash-title {
+            margin-top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff85a2, #a18cd1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInScale 1s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- Install Guide (Browser Only) --- */
+        #install-guide {
+            display: none;
+            padding: 40px 20px;
+            text-align: center;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .guide-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        /* --- Main UI (PWA Mode) --- */
+        #app-main {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px; /* Tab bar space */
+            padding-top: env(safe-area-inset-top);
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            height: calc(70px + env(safe-area-inset-bottom));
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            font-size: 10px;
+            text-decoration: none;
+            flex: 1;
+            transition: 0.3s;
+        }
+
+        .tab-item.active {
+            color: var(--primary-pink);
+        }
+
+        .tab-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+
+        /* Forms & Inputs */
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.8);
+        }
+
+        button {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Terms Bar */
+        .terms-scroll {
+            height: 100px;
+            overflow-y: scroll;
+            background: rgba(0,0,0,0.05);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        /* Setting Items */
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* Hide all tabs by default */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        iframe {
+            width: 100%;
+            height: 70vh;
+            border: none;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <svg style="width:0;height:0;position:absolute;">
+        <defs>
+            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ff85a2;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#a18cd1;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div id="splash-screen">
+        <svg class="heart-svg" viewBox="0 0 32 32">
+            <path d="M16 28.5L14.1 26.8C7.3 20.6 2.8 16.5 2.8 11.5C2.8 7.4 6 4.2 10.1 4.2C12.4 4.2 14.6 5.3 16 7.1C17.4 5.3 19.6 4.2 21.9 4.2C26 4.2 29.2 7.4 29.2 11.5C29.2 16.5 24.7 20.6 17.9 26.8L16 28.5Z" />
+        </svg>
+        <div class="splash-title">恋愛研究所</div>
+    </div>
+
+    <div id="install-guide">
+        <h1 style="color:#ff5e7e">恋愛研究所</h1>
+        <div class="guide-card" id="ios-guide" style="display:none;">
+            <h3>iPhoneでご利用の方</h3>
+            <p>このアプリはインストールが必要です。</p>
+            <ol style="text-align:left;">
+                <li>Safariのメニューから<strong>共有ボタン</strong>（四角に矢印）をタップ</li>
+                <li>下へスクロールし<strong>「ホーム画面に追加」</strong>を選択</li>
+                <li>右上の<strong>「追加」</strong>をタップして完了です。</li>
+            </ol>
+        </div>
+        <div class="guide-card" id="android-guide" style="display:none;">
+            <h3>Android / PC でご利用の方</h3>
+            <p>ブラウザのメニューアイコン（⋮）から<br><strong>「アプリをインストール」</strong>を選択してください。</p>
+        </div>
+        <p style="margin-top:20px; font-size:14px; opacity:0.7;">インストール後、ホーム画面のアイコンから起動してください。</p>
+    </div>
+
+    <div id="app-main">
+        <div class="content-area">
+            
+            <div id="tab-home" class="tab-content active">
+                <h2 style="margin-top:0;">恋は目で見るものではなく、<br>心で見るもの</h2>
+                <div class="glass-card">
+                    <p>恋愛研究所へようこそ。ここではあなたの心の奥底にある感情を整理し、より良い関係を築くためのヒントを提供します。</p>
+                </div>
+                <h3>利用規約</h3>
+                <div class="glass-card">
+                    <div class="terms-scroll">
+                        この利用規約は、今後変更されることがあります。<br><br>
+                        第一条（目的）<br>本アプリはユーザーの恋愛スキルの向上と自己理解を目的としています。<br><br>
+                        第二条（禁止事項）<br>他者への誹謗中傷、公序良俗に反する行為を禁じます。<br><br>
+                        第三条（免責事項）<br>本アプリの利用により生じた損害について、当研究所は一切の責任を負いません。
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-login" class="tab-content">
+                <h2>限定アクセス</h2>
+                <div class="glass-card">
+                    <p>研究員専用エリアです。パスワードを入力してください。</p>
+                    <input type="password" id="pass-input" placeholder="Password...">
+                    <button onclick="checkLogin()">ログイン</button>
+                    <p id="login-error" style="color:#ff4d4d; font-size:14px; margin-top:10px; display:none;">パスワードが正しくありません。</p>
+                </div>
+            </div>
+
+            <div id="tab-love" class="tab-content">
+                <h2>恋愛コラム</h2>
+                <div class="glass-card">
+                    <h3>吊り橋効果の真実</h3>
+                    <p>恐怖によるドキドキを恋のトキメキと錯覚する現象。デートには遊園地が最適な理由です。</p>
+                </div>
+                <div class="glass-card">
+                    <h3>返報性の原理</h3>
+                    <p>好意を示されると、相手も好意を返したくなる心理。まずは自分から笑顔で接してみましょう。</p>
+                </div>
+                <div class="glass-card">
+                    <h3>ミラーリング効果</h3>
+                    <p>相手の動作をさりげなく真似ることで、親近感を持たせるテクニックです。</p>
+                </div>
+            </div>
+
+            <div id="tab-bookshelf" class="tab-content">
+                <h2>本棚</h2>
+                <iframe src="https://read.bookcreator.com/library/-OlyvZf_fsBQQDH7NNgD"></iframe>
+            </div>
+
+            <div id="tab-settings" class="tab-content">
+                <h2>設定</h2>
+                <div class="glass-card">
+                    <div class="setting-row">
+                        <span>ダークモード</span>
+                        <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()">
+                    </div>
+                    <div class="setting-row">
+                        <span>通知（1日1回名言）</span>
+                        <button style="width:auto; padding:5px 15px;" onclick="requestNotification()">許可する</button>
+                    </div>
+                    <div class="setting-row">
+                        <span>文字サイズ</span>
+                        <select onchange="changeFontSize(this.value)">
+                            <option value="14px">小</option>
+                            <option value="16px" selected>中</option>
+                            <option value="20px">大</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span>高コントラスト</span>
+                        <input type="checkbox" onchange="toggleContrast(this.checked)">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <nav class="tab-bar">
+            <a href="javascript:void(0)" class="tab-item active" onclick="showTab('home', this)">
+                <span class="tab-icon">🏠</span><span>ホーム</span>
+            </a>
+            <a href="javascript:void(0)" class="tab-item" onclick="showTab('login', this)">
+                <span class="tab-icon">🔑</span><span>ログイン</span>
+            </a>
+            <a href="javascript:void(0)" class="tab-item" onclick="showTab('love', this)">
+                <span class="tab-icon">💖</span><span>恋愛</span>
+            </a>
+            <a href="javascript:void(0)" class="tab-item" onclick="showTab('bookshelf', this)">
+                <span class="tab-icon">📚</span><span>本棚</span>
+            </a>
+            <a href="javascript:void(0)" class="tab-item" onclick="showTab('settings', this)">
+                <span class="tab-icon">⚙️</span><span>設定</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // --- 1. PWA Detection & Initialization ---
+        window.addEventListener('load', () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            const userAgent = navigator.userAgent.toLowerCase();
+
+            // Splash Screen Animation (2.5秒)
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 800);
+
+                if (isStandalone) {
+                    document.getElementById('app-main').style.display = 'flex';
+                    checkNotificationOnStart();
+                } else {
+                    document.getElementById('install-guide').style.display = 'block';
+                    if (/iphone|ipad|ipod/.test(userAgent)) {
+                        document.getElementById('ios-guide').style.display = 'block';
+                    } else {
+                        document.getElementById('android-guide').style.display = 'block';
+                    }
+                }
+            }, 2500);
+        });
+
+        // --- 2. Tab Navigation ---
+        function showTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            el.classList.add('active');
+        }
+
+        // --- 3. Login Logic ---
         function checkLogin() {
-            const pass = document.getElementById('login-pass').value;
+            const pass = document.getElementById('pass-input').value;
             const error = document.getElementById('login-error');
             if (pass === 'loveaffair') {
-                error.style.display = 'none';
                 window.open('https://ycomomama.com', '_blank');
+                error.style.display = 'none';
             } else {
                 error.style.display = 'block';
             }
         }
 
-        /**
-         * 5. 設定変更機能
-         */
+        // --- 4. Settings Logic ---
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
         }
-
-        function toggleHighContrast() {
-            document.body.classList.toggle('high-contrast');
-        }
-
         function changeFontSize(size) {
-            document.body.classList.remove('font-small', 'font-medium', 'font-large');
-            document.body.classList.add(size);
+            document.documentElement.style.setProperty('--font-size', size);
+        }
+        function toggleContrast(isOn) {
+            if(isOn) document.body.classList.add('high-contrast');
+            else document.body.classList.remove('high-contrast');
         }
 
-        /**
-         * 6. 通知機能 (Notification API)
-         */
-        const quotes = [
+        // --- 5. Notification System ---
+        const loveQuotes = [
             "愛することによって失うものは何もない。しかし、愛することを怖がっていたら、何もかも失ってしまう。",
-            "未熟な愛は『愛してるからあなたが必要だ』と言い、成熟した愛は『あなたが必要だから愛してる』と言う。",
-            "恋とは自分一人のことだと思っているうちは、まだ本当の恋ではありません。",
-            "幸せな結婚の秘訣は、どれだけ相性が良いかではなく、相性の悪さをどう乗り越えるかにある。"
+            "未熟な愛は『あなたが必要だから、あなたを愛する』と言い、成熟した愛は『あなたを愛しているから、あなたが必要だ』と言う。",
+            "恋はまことに影法師、追えば逃げ、逃げれば追うもの。",
+            "幸せになりたいのなら、なりなさい。",
+            "自分を愛せない者は、他人を愛することもできない。"
         ];
 
-        function requestNotify() {
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission();
+        function requestNotification() {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    alert('通知が許可されました。10秒後にデモ通知が届きます。');
+                    setTimeout(() => {
+                        sendQuoteNotification();
+                    }, 10000);
+                }
+            });
+        }
+
+        function sendQuoteNotification() {
+            const quote = loveQuotes[Math.floor(Math.random() * loveQuotes.length)];
+            new Notification("恋愛研究所からの名言", {
+                body: quote,
+                icon: "icon-192.png"
+            });
+        }
+
+        function checkNotificationOnStart() {
+            if (Notification.permission === 'default') {
+                // 初回起動時の確認（少し遅らせて表示）
+                setTimeout(() => {
+                   if(confirm("毎日、恋愛の名言を受け取りますか？")) {
+                       requestNotification();
+                   }
+                }, 3000);
             }
         }
 
-        // 疑似日替わり通知スケジューラ
+        // 簡易的な「1日1回ランダム時間」のスケジューリング（デモ用）
+        // 実際にはサーバーサイドやService WorkerのPeriodic Syncが必要ですが
+        // フロントのみでランダム実行を模倣
         setInterval(() => {
             const now = new Date();
-            // 例: 毎日12:00に通知 (デモ用に短縮も可能)
-            if (now.getHours() === 12 && now.getMinutes() === 0) {
-                showQuoteNotification();
+            // 毎日1%の確率でランダムに名言を出すロジック（簡易版）
+            if (Math.random() < 0.0001 && Notification.permission === 'granted') {
+                sendQuoteNotification();
             }
-        }, 60000); // 1分ごとにチェック
-
-        function showQuoteNotification() {
-            if (Notification.permission === 'granted') {
-                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-                new Notification("本日の恋愛名言", {
-                    body: randomQuote,
-                    icon: 'icon-192.png'
-                });
-            }
-        }
-
+        }, 60000); // 1分ごとに判定
     </script>
 </body>
 </html>
