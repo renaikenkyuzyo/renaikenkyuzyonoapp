@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-title" content="恋愛研究所">
     
     <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIuWInuS6pueglOeptuaJYCIsCiAgInNob3J0X25hbWUiIjogIuWInuS6pueglCIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiIjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmYwZjUiLAogICJ0aGVtZV9jb2xvciI6ICIjZmZkN2U2IiwKICAiaWNvbnMiOiBbCiAgICB7ICJzcmMiOiAiaWNvbi0xOTIucG5nIiwgInNpemVzIjogIjE5MngxOTIiLCAidHlwZSI6ICJpbWFnZS9wbmciIH0sCiAgICB7ICJzcmMiOiAiaWNvbi01MTIucG5nIiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9wbmciIH0KICBdCn0=">
-
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <style>
@@ -26,7 +25,6 @@
             --font-size: 16px;
         }
 
-        /* Dark Mode Support */
         body.dark-mode {
             --bg-gradient: linear-gradient(135deg, #2c003e 0%, #000000 100%);
             --glass-bg: rgba(20, 20, 20, 0.6);
@@ -34,194 +32,78 @@
             --text-main: #f3e5f5;
         }
 
-        /* High Contrast Support */
         body.high-contrast {
             --glass-bg: rgba(255, 255, 255, 0.95);
             --text-main: #000;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
             overflow: hidden;
             font-size: var(--font-size);
         }
 
-        /* --- iOS 26 Glassmorphism Style --- */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
             padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
         }
 
-        /* --- Full-screen Layouts --- */
         .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            padding: 20px;
-            padding-bottom: calc(80px + var(--safe-area-bottom));
-            overflow-y: auto;
-            animation: fadeIn 0.4s ease;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; flex-direction: column;
+            padding: 20px; padding-bottom: calc(90px + var(--safe-area-bottom));
+            overflow-y: auto; animation: fadeIn 0.4s ease;
         }
-
         .screen.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Splash Screen --- */
+        /* Splash Screen */
         #splash-screen {
-            position: fixed;
-            z-index: 9999;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            inset: 0;
+            position: fixed; inset: 0; z-index: 9999;
+            background: #fff; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
         }
-
         .heart-svg {
-            width: 120px;
-            height: 120px;
-            fill: url(#heartGradient);
-            filter: drop-shadow(0 0 10px rgba(255,128,171,0.5));
+            width: 120px; height: 120px; fill: url(#heartGradient);
             animation: heartbeat 1.5s ease-in-out infinite;
         }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            15% { transform: scale(1.2); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } }
         .splash-title {
-            margin-top: 20px;
-            font-size: 2rem;
-            font-weight: 800;
+            margin-top: 20px; font-size: 2rem; font-weight: 800;
             background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* --- Install Guide --- */
-        #install-guide {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px;
-        }
-
-        /* --- Tab Bar --- */
+        /* Tab Bar */
         .tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            position: fixed; bottom: 0; left: 0; right: 0;
             height: calc(65px + var(--safe-area-bottom));
             background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-top: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: var(--safe-area-bottom);
-            z-index: 1000;
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: var(--safe-area-bottom); z-index: 1000;
         }
-
-        .tab-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 10px;
-            color: #888;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
+        .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #888; cursor: pointer; }
         .tab-item.active { color: var(--accent-pink); }
         .tab-item svg { width: 24px; height: 24px; margin-bottom: 4px; }
 
-        /* --- UI Components --- */
-        .term-box {
-            height: 100px;
-            overflow-y: scroll;
-            background: rgba(255,255,255,0.2);
-            padding: 10px;
-            font-size: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-
-        input[type="password"] {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255,255,255,0.5);
-            margin: 15px 0;
-            outline: none;
-            text-align: center;
-            font-size: 1.2rem;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple));
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255,128,171,0.3);
-        }
-
-        .error-msg { color: #d32f2f; font-size: 14px; margin-top: 10px; display: none; }
-
-        iframe {
-            width: 100%;
-            height: calc(100vh - 200px);
-            border: none;
-            border-radius: 20px;
-            background: #fff;
-        }
-
-        /* Settings Grid */
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        /* Components */
+        .btn { background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple)); color: white; border: none; padding: 12px; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; }
+        input[type="password"] { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); margin: 15px 0; text-align: center; font-size: 1.2rem; outline: none; }
+        .term-box { height: 100px; overflow-y: scroll; background: rgba(255,255,255,0.2); padding: 10px; font-size: 12px; border-radius: 12px; margin-top: 10px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -230,8 +112,8 @@
         <svg class="heart-svg" viewBox="0 0 32 32">
             <defs>
                 <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#ff80ab;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#9575cd;stop-opacity:1" />
+                    <stop offset="0%" style="stop-color:#ff80ab;" />
+                    <stop offset="100%" style="stop-color:#9575cd;" />
                 </linearGradient>
             </defs>
             <path d="M16 28.5L14.1 26.7C7.33 20.57 3 16.5 3 11.5 3 7.42 6.42 4 10.5 4c2.31 0 4.52 1.08 6 2.79C17.98 5.08 20.19 4 22.5 4 26.58 4 30 7.42 30 11.5c0 5-4.33 9.07-11.1 15.22L16 28.5z"/>
@@ -240,247 +122,128 @@
     </div>
 
     <div id="install-guide" class="screen">
-        <div class="glass-card">
-            <h2>アプリとしてインストール</h2>
-            <p id="guide-text">このアプリをホーム画面に追加して、本物のアプリのような体験をお楽しみください。</p>
-            <div id="guide-steps" style="text-align: left; margin-top: 20px;">
-                </div>
+        <div class="glass-card" style="margin-top: 40px; text-align: center;">
+            <h2>アプリを追加してください</h2>
+            <p>このサイトはPWA（アプリ）として設計されています。ホーム画面に追加して起動してください。</p>
+            <div id="guide-steps" style="text-align: left; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 15px;"></div>
         </div>
     </div>
 
     <div id="app-content" style="display: none;">
         
         <section id="tab-home" class="screen active">
-            <h1 style="font-size: 1.5rem; line-height: 1.4;">「恋は目で見るものではなく、<br>心で見るもの」</h1>
+            <h1 style="font-size: 1.5rem;">「恋は目で見るものではなく、<br>心で見るもの」</h1>
             <div class="glass-card">
-                <p>恋愛研究所へようこそ。ここでは科学的・心理学的アプローチからあなたの「愛」を研究し、深めるためのツールを提供します。</p>
+                <p>恋愛研究所へようこそ。ここではあなたの「愛」を深めるための研究を行っています。</p>
             </div>
             <div class="glass-card">
                 <h3>利用規約</h3>
                 <div class="term-box">
                     この利用規約は、今後変更されることがあります。<br>
-                    第一条（目的）：本アプリは恋愛における心理分析の補助を目的としています。<br>
-                    第二条（個人情報）：入力されたパスワード等の情報は端末内でのみ処理されます。<br>
-                    第三条（免責）：本アプリの助言によって生じた事象について責任は負いかねます。<br>
-                    第四条：楽しく使いましょう。
+                    第一条：本アプリは恋愛心理分析の補助を目的とします。...
                 </div>
             </div>
         </section>
 
         <section id="tab-login" class="screen">
             <div class="glass-card" style="text-align: center; margin-top: 40px;">
-                <h2>研究所 秘密の入り口</h2>
-                <p>恋愛研究所専用パスワードを入力してください</p>
-                <input type="password" id="pass-input" placeholder="••••••••">
+                <h2>研究員ログイン</h2>
+                <input type="password" id="pass-input" placeholder="パスワードを入力">
                 <button class="btn" onclick="checkLogin()">ログイン</button>
-                <p id="login-error" class="error-msg">パスワードが違います。もう一度、愛を込めて。</p>
+                <p id="login-error" style="color:red; display:none; margin-top:10px;">パスワードが違います</p>
             </div>
         </section>
 
         <section id="tab-love" class="screen">
-            <h2>恋愛の豆知識</h2>
-            <div class="glass-card">
-                <h3>吊り橋効果の真実</h3>
-                <p>恐怖によるドキドキを恋と錯覚する現象。実は「最初から少し好意がある相手」にしか効かないことが判明しています。</p>
-            </div>
-            <div class="glass-card">
-                <h3>ミラーリングの魔法</h3>
-                <p>相手の動作をさりげなく真似ることで親近感を生みます。やりすぎは禁物、3秒遅らせるのがコツです。</p>
-            </div>
-            <div class="glass-card">
-                <h3>3ヶ月の壁</h3>
-                <p>脳内の恋愛ホルモン「フェニルエチルアミン」が落ち着く最初の時期。ここからが本当の信頼構築です。</p>
-            </div>
+            <h2>恋愛豆知識</h2>
+            <div class="glass-card"><h3>吊り橋効果</h3><p>ドキドキを恋と勘違いする心理現象です。</p></div>
+            <div class="glass-card"><h3>3ヶ月の法則</h3><p>最初の倦怠期を乗り越えるのが鍵です。</p></div>
         </section>
 
-        <section id="tab-bookshelf" class="screen">
-            <h2>図書室</h2>
-            <div class="glass-card" style="padding: 10px;">
-                <div style="background: #eee; height: 100%; border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                    <p>https://read.bookcreator.com/library/-OlyvZf_fsBQQDH7NNgD</p>
-                    <p style="font-size: 0.8rem; color: #666;">（ここに外部コンテンツが読み込まれます）</p>
-                </div>
+        <section id="tab-bookshelf" class="screen" style="padding: 10px;">
+            <div style="padding: 10px;">
+                <h2 style="margin:0;">本棚</h2>
+                <p style="font-size:0.8rem; opacity:0.7;">ブッククリエイトから読み込んでいます</p>
+            </div>
+            <div style="flex:1; width:100%; border-radius: 20px; overflow:hidden; border:1px solid var(--glass-border); -webkit-overflow-scrolling:touch;">
+                <iframe src="https://book-create.jp" style="width:100%; height:100%; border:none;"></iframe>
             </div>
         </section>
 
         <section id="tab-settings" class="screen">
             <h2>設定</h2>
             <div class="glass-card">
-                <div class="setting-row">
-                    <span>ダークモード</span>
-                    <input type="checkbox" id="dark-toggle" onchange="toggleDark()">
-                </div>
-                <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
-                <div class="setting-row">
-                    <span>通知（日替わり名言）</span>
-                    <button onclick="requestNotification()" id="notif-btn" style="padding: 5px 10px; border-radius: 10px; border: 1px solid var(--accent-pink);">許可する</button>
-                </div>
-                <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
-                <div class="setting-row">
-                    <span>文字サイズ</span>
-                    <select onchange="changeFontSize(this.value)" style="border-radius: 5px; padding: 2px 5px;">
-                        <option value="14px">小</option>
-                        <option value="16px" selected>中</option>
-                        <option value="20px">大</option>
-                    </select>
-                </div>
-                <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 15px 0;">
-                <div class="setting-row">
-                    <span>色覚サポート</span>
-                    <input type="checkbox" onchange="toggleContrast()">
-                </div>
+                <div class="setting-row"><span>ダークモード</span><input type="checkbox" onchange="toggleDark()"></div>
+                <div class="setting-row"><span>通知許可</span><button onclick="requestNotif()" style="font-size:12px;">許可設定</button></div>
+                <div class="setting-row"><span>文字サイズ</span><select onchange="changeFont(this.value)"><option value="14px">小</option><option value="16px" selected>中</option><option value="20px">大</option></select></div>
+                <div class="setting-row"><span>高コントラスト</span><input type="checkbox" onchange="toggleContrast()"></div>
             </div>
-            <p style="text-align: center; font-size: 12px; opacity: 0.6;">Version 26.0.1 (iOS 26 Styled)</p>
         </section>
 
         <nav class="tab-bar">
-            <div class="tab-item active" onclick="showTab('home')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                <span>ホーム</span>
-            </div>
-            <div class="tab-item" onclick="showTab('login')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                <span>ログイン</span>
-            </div>
-            <div class="tab-item" onclick="showTab('love')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span>恋愛</span>
-            </div>
-            <div class="tab-item" onclick="showTab('bookshelf')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-                <span>本棚</span>
-            </div>
-            <div class="tab-item" onclick="showTab('settings')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.21.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                <span>設定</span>
-            </div>
+            <div class="tab-item active" onclick="showTab('home')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>ホーム</span></div>
+            <div class="tab-item" onclick="showTab('login')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg><span>ログイン</span></div>
+            <div class="tab-item" onclick="showTab('love')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>恋愛</span></div>
+            <div class="tab-item" onclick="showTab('bookshelf')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg><span>本棚</span></div>
+            <div class="tab-item" onclick="showTab('settings')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.21.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg><span>設定</span></div>
         </nav>
     </div>
 
     <script>
-        // --- 1. PWA Detection & Logic ---
         const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
         const ua = navigator.userAgent.toLowerCase();
         const isiOS = /iphone|ipad|ipod/.test(ua);
         const isAndroid = /android/.test(ua);
 
-        // Splash screen and content switching
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('splash-screen').style.display = 'none';
-                
                 if (isPWA) {
                     document.getElementById('app-content').style.display = 'block';
                 } else {
                     showInstallGuide();
                 }
-            }, 2500); // 2.5s splash animation
+            }, 2500);
         });
 
         function showInstallGuide() {
             const guide = document.getElementById('install-guide');
             const steps = document.getElementById('guide-steps');
             guide.style.display = 'flex';
-
             if (isiOS) {
-                steps.innerHTML = `
-                    <ol>
-                        <li>下の共有ボタン <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg> をタップ</li>
-                        <li>「ホーム画面に追加」を選択</li>
-                        <li>右上の「追加」をタップして完了！</li>
-                    </ol>`;
+                steps.innerHTML = `<ol><li>共有ボタンをタップ</li><li>「ホーム画面に追加」を選択</li></ol>`;
             } else if (isAndroid) {
-                steps.innerHTML = `
-                    <ol>
-                        <li>右上のメニュー <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg> をタップ</li>
-                        <li>「アプリをインストール」または「ホーム画面に追加」を選択</li>
-                    </ol>`;
+                steps.innerHTML = `<ol><li>メニューをタップ</li><li>「アプリをインストール」を選択</li></ol>`;
             } else {
-                steps.innerHTML = `<p>PCのブラウザのアドレスバーにあるインストールボタン、またはメニューから「インストール」を選択してください。</p>`;
+                steps.innerHTML = `<p>ブラウザのインストールボタンを押してください。</p>`;
             }
         }
 
-        // --- 2. Tab Navigation ---
-        function showTab(tabId) {
+        function showTab(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            
-            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('tab-' + id).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        // --- 3. Login Logic ---
         function checkLogin() {
             const pass = document.getElementById('pass-input').value;
-            const error = document.getElementById('login-error');
             if (pass === 'loveaffair') {
-                error.style.display = 'none';
                 window.open('https://ycomomama.com', '_blank');
             } else {
-                error.style.display = 'block';
+                document.getElementById('login-error').style.display = 'block';
             }
         }
 
-        // --- 4. Settings Logic ---
-        function toggleDark() {
-            document.body.classList.toggle('dark-mode');
-        }
+        function toggleDark() { document.body.classList.toggle('dark-mode'); }
+        function toggleContrast() { document.body.classList.toggle('high-contrast'); }
+        function changeFont(s) { document.documentElement.style.setProperty('--font-size', s); }
 
-        function toggleContrast() {
-            document.body.classList.toggle('high-contrast');
-        }
-
-        function changeFontSize(size) {
-            document.documentElement.style.setProperty('--font-size', size);
-        }
-
-        // --- 5. Notification Logic ---
-        const quotes = [
-            "愛は信頼の別名です。",
-            "大切なのは、どれだけ多くのことをしたかではなく、どれだけ心を込めたかです。",
-            "自分自身を愛することが、一生続くロマンスの始まりです。",
-            "恋とは、自分とは正反対の人間を愛することである。",
-            "最高の愛は、魂を目覚めさせる。"
-        ];
-
-        function requestNotification() {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    alert('通知が許可されました！毎日名言をお届けします。');
-                    setupDailyNotification();
-                    document.getElementById('notif-btn').innerText = '許可済み';
-                    document.getElementById('notif-btn').disabled = true;
-                }
+        function requestNotif() {
+            Notification.requestPermission().then(p => {
+                if (p === 'granted') alert('通知が許可されました');
             });
         }
-
-        function setupDailyNotification() {
-            // PWAの通知シミュレーション（本来はServiceWorker経由ですが、
-            // 今回は1ファイル完結のため、起動時にその日の分をスケジュールするロジック）
-            const quote = quotes[Math.floor(Math.random() * quotes.length)];
-            
-            // デモ用に10秒後にも通知を出す設定（テスト用）
-            setTimeout(() => {
-                new Notification("本日の恋愛名言", {
-                    body: quote,
-                    icon: "icon-192.png"
-                });
-            }, 10000);
-
-            // 本来の「1日1回ランダム」は、サーバーサイドプッシュまたは
-            // バックグラウンド同期が必要ですが、ここでは擬似的に記録
-            console.log("Next notification scheduled with quote: " + quote);
-        }
-
-        // 初回ロード時のスクロール防止（iOSのバウンス抑制）
-        document.addEventListener('touchmove', function (e) {
-            if (e.target.closest('.screen, .term-box')) {
-                // スクロール可能な要素内は許可
-            } else {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
     </script>
 </body>
 </html>
